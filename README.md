@@ -1,2 +1,2 @@
 # Mobile-Application-with-Validation
-Mobile Application supported on JQuery Mobile validations made with JavaScript
+Mobile Application developed in JQuery Mobile with validations made with JavaScript
