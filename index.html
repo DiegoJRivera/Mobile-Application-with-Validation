@@ -1,0 +1,574 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Photography Club</title>
+    
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css">
+<script src="jQuery/jquery-1.11.2.min.js"></script>
+<script src="jQuery/jquery.mobile-1.4.5.min.js"></script>
+
+<script>
+function doRegister() //For Register button:
+{
+
+//variables declaration
+  var msg = "", msg2 = "";
+  var name = document.getElementById('txtName').value;
+  var mail = document.getElementById('txtEmail').value;
+  mail = mail.trim();
+  var mail2 = document.getElementById('txtConEmail').value;
+  var validMail = mail.indexOf('@');
+  var validMail2 = mail.indexOf('.');
+  var coments = document.getElementById('textarea').value;
+  var count = 0, mailFill = 0, confirmCount = 0, noComent = 0;
+  count = parseInt(count);
+  confirmCount = parseInt(confirmCount);
+  emptyMsg = "";
+
+//name validation
+  if(name.length >= 2)
+  {
+    confirmCount +=1;
+    msg2 += "Thanks <strong>" + name + "</strong> for registering!";
+  }
+  else if (name.length == 1)
+  {
+    msg += "*Sorry, your name must to have at least 2 characters. Please try again.";
+  }
+  else
+  {
+    msg += "*You must enter your name!.";
+  }
+
+//e-mail validation
+  if(mail.length > 0)
+  {
+    //if (validMail != -1 && validMail2 != -1 && validMail < validMail2) --> original code to validate at (@) and dot(.) swapped by regular expression
+    if(/(\w+@[a-zA-Z_]+?\.[a-zA-Z_]{2,6})/.test(mail) == true)
+    {
+      msg2 += "<br />We will send you a confirmation e-Mail to: <strong>" + mail + "</strong>";
+      confirmCount +=1;
+      mailFill += 1; 
+    }
+    else
+    {
+      msg += "<br />*e-MAil not valid. Your mail must to have at (@) and then a dot com (.com) characters (example@gmail.com).";
+    }
+  }  
+  else
+  {
+    msg += "<br />*You must enter your e-Mail!.";
+  }
+
+//e-mail confirmation
+  if(mailFill > 0)
+  {
+    if(mail === mail2)
+    {
+      confirmCount +=1;
+    }
+    else
+    {
+      msg += "<br />*e-Mail doesn't match, please try again!.";
+    }
+  }
+
+//Camara type print selection
+  msg2 += "<br />You have a: ";
+  if(document.getElementById('radDslr').checked)
+    {
+      msg2 += "<strong>DSLR Camera</strong>";
+    }
+    else if(document.getElementById('radPs').checked)
+    {
+      msg2 += "<strong>Point and Shoot Camera</strong>";
+    }
+    else if(document.getElementById('radNc').checked)
+    {
+      msg2 += "<strong>No Camera</strong>";
+    }
+    else
+    {
+      msg2 += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+    }
+
+//interest area validation
+  msg2 += "<br />You are interested in the following types of photography: ";
+  if(document.getElementById('chkLandscape').checked)
+  {
+    count += 1;
+    msg2 += "<br /><strong>Landscape.</strong>";
+  }
+  if(document.getElementById('chkFashion').checked)
+  {
+    count += 1;
+    msg2 += "<br /><strong>Fashion.</strong>";
+  }
+
+  if(document.getElementById('chkFood').checked)
+  {
+    count += 1;
+    msg2 += "<br /><strong>Food.</strong>";
+  }
+
+  if(document.getElementById('chkPort').checked)
+  {
+    count += 1;
+    msg2 += "<br /><strong>Portraiture.</strong>";
+  }
+
+  if(document.getElementById('chkSport').checked)
+  {
+    count += 1;
+    msg2 += "<br /><strong>Sport.</strong>";
+  }
+
+  if(document.getElementById('chkOther').checked)
+  {
+    count += 1;
+    if(coments.length >= 5)
+    {
+      msg2 += "<br /><strong>Others: </strong>" + coments;
+    }
+    else if(coments.length == 0)
+    {
+      msg += "<br />*Please enter any comment.";
+    }
+    else if(coments.length > 0 && coments.length < 5)
+    {
+        msg += "<br />*Please enter a longer comment about your interests.";
+    }
+    else
+    {
+      msg += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+      msg2 += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+    }
+  }
+  else
+  {
+    noComent += 1; //for display Summary dialog box in case the user didn't check other
+  }
+
+  if(count == 0)
+  {
+    msg += "<br />*Please select at least one interest.";
+  }
+
+//warning and confirmation messages
+  document.getElementById("regAlert").innerHTML = msg;
+  document.getElementById("summary").innerHTML = msg2;
+
+//confirmation box display validation with all fields completed
+  if(confirmCount == 3 && count > 0)
+  {
+    if(document.getElementById('chkOther').checked && coments.length >= 5) //to avoid display dialog box without comments
+    {
+      window.location.href = "#myDialog";
+      document.getElementById('myForm').reset(); //to reset all values to default values after close dialog box.
+      document.getElementById('display').style.display = "none";
+    }
+    
+    else if(noComent > 0) //display dialog box, when user didn't check "Other" option
+    {
+      window.location.href = "#myDialog";//$.mobile.changePage( "#myDialog", { role: "dialog" } )........usar esto para open dialog
+      document.getElementById('myForm').reset(); //to reset all values to default values after close dialog box.
+      document.getElementById('display').style.display = "none";
+    }
+    else
+    {
+      msg += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+      msg2 += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+    }
+  }
+}
+
+function doOther() // to display coments box when "Other" choice is checked
+{
+  if(document.getElementById('chkOther').checked)
+  {
+    document.getElementById('display').style.display = "block";
+  }
+  else
+  {
+    document.getElementById('display').style.display = "none";
+  }
+}
+
+function doStartAgain() //For Start Again Button for Registration Page
+{
+  document.getElementById('myForm').reset();
+  document.getElementById("regAlert").innerHTML = emptyMsg; //to clear error message
+}
+
+function doStartAgain2() //For Start Again Button for Units Offered this Weekend Page
+{
+  document.getElementById('myForm2').reset();
+  document.getElementById("regAlert2").innerHTML = emptyMsg; //to clear error message
+}
+
+function doBookUnits() //For Books Units button:
+{
+//variables declaration
+  var msg3 = "", msg4 = "";
+  var name2 = document.getElementById('txtName2').value;
+  var selUnit = document.getElementById('selUnits').value;
+  var attendance = document.getElementById('txtNum').value;
+  var mobile = document.getElementById('txtMob').value;
+  //attendance = attendance.trim();
+  var confirmCount2 = 0, price = 0;
+
+//name validation
+  if(name2.length >= 2)
+  {
+    confirmCount2 += 1;
+    msg3 += "Thanks <strong>" + name2 + "</strong> for enrolling into: ";
+  }
+  else if (name2.length == 1)
+  {
+    msg4 += "*Sorry, your name must to have at least 2 characters. Please try again.";
+  }
+  else
+  {
+    msg4 += "*You must enter your name!.";
+  }
+
+//unit confirmation and prices assignment
+  if(selUnit == "Unit1")
+  {
+    msg3 += "<strong>Unit 1: The Camera and Lenses</strong> on ";
+    price = 100;
+  }
+  else if(selUnit == "Unit3")
+  {
+    msg3 += "<strong>Unit 3: Lighting</strong> on ";
+    price = 100;
+  }
+  else if(selUnit == "Unit5")
+  {
+    msg3 += "<strong>Unit 5: Style</strong> on ";
+    price = 150;
+  }
+  else if(selUnit == "Unit7")
+  {
+    msg3 += "<strong>Unit 7: Photojournalism</strong> on ";
+    price = 200;
+  }
+  else
+  {
+    msg3 += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+  }
+
+// attending day selection
+  if(document.getElementById('radFri').checked)
+  {
+    msg3 += "<strong>Friday</strong>";
+  }
+  else if(document.getElementById('radSat').checked)
+  {
+    msg3 += "<strong>Saturday</strong>";
+  }
+  else
+  {
+    msg3 += "<strong>Sunday</strong>";
+  }
+
+  msg3 += "<br />The cost of this unit is: <strong>$" + price.toFixed(2) + "</strong>";
+
+//attendance validation
+  if(attendance <= 0 || attendance.length == 0 || isNaN(attendance) || /[A-Za-z]/.test(attendance) == true || /\W/.test(attendance) == true)
+  {
+    document.getElementById("txtNum").value = "";
+    document.getElementById("txtNum").focus();
+    msg4 += "<br />*Sorry, please enter the number of attending people, must to be at least one person."
+  }
+  else if(attendance > 0 && /[A-Za-z]/.test(attendance) == false)
+  {
+    msg3 += "<br />There will be <strong>" + attendance + "</strong> attending.";
+    confirmCount2 += 1;
+  }
+  else
+  {
+    msg4 += "<br />****Oops!!! cheeck the code, must be an error!!!!";
+  }
+
+  attendance = parseInt(attendance);
+  total = price * attendance;
+  msg3 += "<br />The total cost will be: <strong>$" + total.toFixed(2) + "</strong>"
+
+//mobile number validation
+  if(mobile.length > 0)
+  {
+    if(mobile.length !== 10 || isNaN(mobile))
+    {
+      msg4 += "<br />*Sorry, Try again. Enter a valid mobile number of 10 digits."
+    }
+    else if(mobile.length === 10)
+    {
+      confirmCount2 += 1;
+    }
+  }
+  else
+  {
+    confirmCount2 += 1;
+  }
+
+//SMS validation
+  if(document.getElementById('chkSms').checked)
+  {
+    if(mobile.length !== 10 || isNaN(mobile))
+    {
+      msg4 += "<br />*Please ensure to enter a valid mobile number."
+    }
+    else
+    {
+      msg3 += "<br />You wish to receive an SMS notification on: <strong>" + mobile + "</strong>"
+      confirmCount2 += 1;
+    }
+  }
+  else
+  {
+      msg3 += "<br />You do NOT wish to receive an SMS notification prior to the event."
+      confirmCount2 += 1;
+  }
+  
+// Second confirmation box display validation with all fields completed
+  if(confirmCount2 == 4)
+  {
+    window.location.href = "#myDialog2";
+    document.getElementById('myForm2').reset(); //to reset all values to default values after close dialog box..
+  }
+
+
+//warning and confirmation messages
+  document.getElementById("summary2").innerHTML = msg3;
+  document.getElementById("regAlert2").innerHTML = msg4;
+}
+</script> 
+</head>
+
+<body> 
+<!--<___________________________main page, menu___________________________>-->
+<div data-role="page" id="page" data-theme="a">
+    <div data-role="header">
+        <h1>Photography Club</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+        <ul data-role="listview">
+            <li><a href="#page2">Registration</a></li>
+            <li><a href="#page3">Units Offered this Weekend</a></li>
+            <li><a href="#page4">Course Structure</a></li>
+            <li><a href="html/gallery.html" rel="external">Members Gallery</a></li>
+        </ul>		
+   </div>
+   <div data-role="footer">
+        <h4>Diego Rivera - 100543889</h4>
+   </div>
+</div>
+<!--<___________________________Registration_______________________________>-->
+<div data-role="page" id="page2">
+    <div data-role="header" data-add-back-btn="true">
+        <h1>Registration</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+  <form id="myForm"> <!-- to reset the values scope-->
+    <div data-role="fieldcontain">
+      <label for="txtName">Name:</label>
+      <input type="text" name="txtName" id="txtName" />
+    </div>
+
+    <div data-role="fieldcontain">
+      <label for="txtEmail">e-Mail:</label>
+      <input type="text" name="txtEmail" id="txtEmail" />
+    </div>
+
+    <div data-role="fieldcontain">
+      <label for="txtConEmail">Confirm e-Mail:</label>
+      <input type="text" name="txtConEmail" id="txtConEmail" />
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" data-type="horizontal">
+      <legend>Camara Type:</legend>
+
+      <input type="radio" name="radCamara" id="radDslr" checked="checked" />
+      <label for="radDslr">DSLR Camera</label>
+
+      <input type="radio" name="radCamara" id="radPs" />
+      <label for="radPs">Point and Shoot Camera</label>
+      
+      <input type="radio" name="radCamara" id="radNc" />
+      <label for="radNc">No Camera</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup">
+      <legend>Interested In:</legend>
+          
+      <input type="checkbox" name="chkInterests" id="chkLandscape" class="custom" />
+      <label for="chkLandscape">Landscape</label>
+
+      <input type="checkbox" name="chkInterests" id="chkFashion" class="custom" />
+      <label for="chkFashion">Fashion</label>
+
+      <input type="checkbox" name="chkInterests" id="chkFood" class="custom" />
+      <label for="chkFood">Food</label>
+
+      <input type="checkbox" name="chkInterests" id="chkPort" class="custom" />
+      <label for="chkPort">Portraiture</label>
+
+      <input type="checkbox" name="chkInterests" id="chkSport" class="custom" />
+      <label for="chkSport">Sport</label>
+
+      <input type="checkbox" name="chkInterests" id="chkOther" class="custom" onclick="doOther()"/>
+      <label for="chkOther">Other</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain" style="display:none" id="display">
+      <label for="textarea">Other Areas:</label>
+      <textarea cols="40" rows="4" name="textarea" id="textarea"></textarea>
+    </div>
+
+    <div data-role="fieldcontain">
+      <label>&nbsp;</label>
+      <input type="button" value="Register" data-inline="true" onclick="doRegister()" />
+      <!-- doStartAgain function to reset all the fields and error message to default values. doOther function to hide again the coment box -->
+      <input type="button" value="Start Again" data-inline="true" onclick="doStartAgain(); doOther()" /> 
+    </div>
+  </form>
+    <p id="regAlert" align="center" style="color:red;"></p>
+
+    </div>
+    <div data-role="footer"> 
+        <h4>Diego Rivera - 100543889</h4>    
+    </div>
+</div>
+
+<!--<___________________________Dialog Box Summary Registration_______________________________>-->    
+<div data-role="page" id="myDialog" data-dialog="true"> <!--< para open dialog....importante>-->    
+    <div data-role="header">
+          <h1>Summary</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">  
+        <p id="summary"></p>  
+    </div>
+    <div data-role="fieldcontain" align="center">
+      <a href="#" data-role="button" data-inline="true" data-rel="back" data-direction="reverse" >Close</a>
+    </div>
+    <div data-role="footer">
+        <h4>Diego Rivera - 100543889</h4>
+    </div>
+</div>
+
+<!--<___________________________Units Offered this Weekend_______________________________>-->    
+<div data-role="page" id="page3">
+    <div data-role="header" data-add-back-btn="true">
+         <h1>Units Offered this Weekend</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">	
+    
+    <p>Enrol into one of the units offered this coming weekend as listed below.<br /><em>You may wish to bring a friend along.</em></p>
+
+  <form id="myForm2"> <!-- to reset the values scope-->
+    <div data-role="fieldcontain">
+      <label for="txtName2">Name:</label>
+      <input type="text" name="txtName2" id="txtName2" />
+    </div>
+
+    <div data-role="fieldcontain">
+      <label for="txtNum">Number of people attending:</label>
+      <input type="text" name="txtNum" id="txtNum" value="1"/>
+    </div>
+
+    <div data-role="fieldcontain">
+      <label for="txtMob">Mobile Phone:<br /><em>(optional)</em></label>
+      <input type="text" name="txtMob" id="txtMob" />
+    </div>
+
+    <div data-role="fieldcontain">
+      <label for="selUnits" class="select">Units offered this week:</label>
+      <select name="selUnits" id="selUnits" data-native-menu="false" />
+        <option value="Unit1">Unit 1: The Camera and Lenses $100</option>
+        <option value="Unit3" selected="selected">Unit 3: Lighting $100</option>
+        <option value="Unit5">Unit 5: Style $150</option>
+        <option value="Unit7">Unit 7: Photojournalism $200</option>
+      </select>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup" >
+      <legend>Attend on:</legend>
+
+      <input type="radio" name="radAttendDay" id="radFri" checked="checked" />
+      <label for="radFri">Friday</label>
+
+      <input type="radio" name="radAttendDay" id="radSat" />
+      <label for="radSat">Saturday</label>
+      
+      <input type="radio" name="radAttendDay" id="radSun" />
+      <label for="radSun">Sunday</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <fieldset data-role="controlgroup">
+      <legend>SMS Notification:</legend>
+      <input type="checkbox" name="chkSmsNotification" id="chkSms" class="custom" checked="checked" />
+      <label for="chkSms">Receive SMS notification prior to event</label>
+      </fieldset>
+    </div>
+
+    <div data-role="fieldcontain">
+      <label>&nbsp;</label>
+      <input type="button" value="Books Units" data-inline="true" onclick="doBookUnits()" />
+      <input type="button" value="Start Again" data-inline="true" onclick="doStartAgain2()" />
+    </div>
+  </form>
+
+    <p id="regAlert2" align="center" style="color:red;"></p>
+
+    </div>
+    <div data-role="footer">
+        <h4>Diego Rivera - 100543889</h4>
+  	</div>
+</div>
+
+<!--<___________________________Dialog Box Second Summary Registration_______________________________>-->    
+<div data-role="page" id="myDialog2" data-dialog="true">
+    <div data-role="header">
+          <h1>Summary</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content">  
+        <p id="summary2"></p>  
+    </div>
+    <div data-role="fieldcontain" align="center">
+      <a href="#" data-role="button" data-inline="true" data-rel="back" data-direction="reverse" >Close</a>
+    </div>
+    <div data-role="footer">
+        <h4>Diego Rivera - 100543889</h4>
+    </div>
+</div>
+
+<!--<___________________________Course Structure_______________________________>-->
+<div data-role="page" id="page4">
+    <div data-role="header" data-add-back-btn="true">
+          <h1>Course Structure</h1>
+    </div>
+    <!--<div data-role="content">-->
+    <div data-role="main" class="ui-content" align="center">	
+        <p><img src="images/work.png" alt="Web Under Construction Advertisement" width="400" height="400" /></p>	
+    </div>
+    <div data-role="footer">
+        <h4>Diego Rivera - 100543889</h4>
+  	</div>
+</div>
+
+</body>
+</html>
